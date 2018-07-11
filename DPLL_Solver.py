@@ -138,21 +138,21 @@ def get_symbols(cnf):
 def generate_cnf(R):
     cnf = []
 
-    for m in range(0, M):
+    for m in range(1, M + 1):
         clause = []
-        for n in range(0, N):
+        for n in range(1, N+1):
             clause.append("X" + str([m, n]))
-            for ni in range(n, N):
+            for ni in range(n+1, N+1):
                 clauseneg = []
                 clauseneg.append("~X" + str([m, n]))
                 clauseneg.append("~X" + str([m, ni]))
                 cnf.append(clauseneg)
         cnf.append(clause)
 
-    for x in range(0, M):
-        for y in range(0, M):
+    for x in range(1, M+1):
+        for y in range(1, M+1):
             if R[x][y] == 1:
-                for n in range(0, N):
+                for n in range(1, N+1):
                     clause = []
                     clause.append("X" + str([y, n]))
                     clause.append("~X" + str([x, n]))
@@ -162,10 +162,10 @@ def generate_cnf(R):
                     clause.append("~X" + str([y, n]))
                     cnf.append(clause)
 
-    for x in range(0, M):
-        for y in range(0, M):
+    for x in range(1, M+1):
+        for y in range(1, M+1):
             if R[x][y] == -1:
-                for n in range(0, N):
+                for n in range(1, N+1):
                     clause = []
                     clause.append("~X" + str([x, n]))
                     clause.append("~X" + str([y, n]))
@@ -190,14 +190,20 @@ if __name__ == "__main__":
 	N = params[1] # Number of tables
 
 	if M != 0 and N != 0:
-		R = [[0]*M]*M
+		#R = [[0]*M]*M
+		R = [[]]
+		for x in range(0, M):
+			inner = [[]]
+			for y in range(0, M):
+				inner.append(0)
+			R.append(inner)
 
 		for index in range(1, len(inputList)):
 			b = inputList[index].split(' ')
 			if b[2] == 'F' or b[2] == 'F\n':
-				R[int(b[0]) - 1][int(b[1]) - 1] = 1
+				R[int(b[0])][int(b[1])] = 1
 			else:
-				R[int(b[0]) - 1][int(b[1]) - 1] = -1
+				R[int(b[0])][int(b[1])] = -1
 
 		output = generate_cnf(R)
 
@@ -217,8 +223,8 @@ if __name__ == "__main__":
 					listtmp.append(int(tmp[0]))
 					listtmp.append(int(tmp[1]))
 					listnew.append(listtmp)
-				for val in sort(listnew):
-					f.write(str[val[0]] + ' ' + str[val[1]]+'\n')
+				for val in sorted(listnew):
+					f.write(str(val[0]) + ' ' + str(val[1])+'\n')
 		f.close()
 	else:
 		with open("output.txt", 'w') as f:
